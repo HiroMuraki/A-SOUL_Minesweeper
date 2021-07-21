@@ -31,7 +31,7 @@
                     <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding RowSize}" VerticalAlignment="Center" FontSize="48" Foreground="{StaticResource TextTheme}"/>
                     <Label Grid.Row="1" Grid.Column="0" Content="列数：" Foreground="{StaticResource TextTheme}" FontSize="48"/>
                     <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ColumnSize}" VerticalAlignment="Center" FontSize="48" Foreground="{StaticResource TextTheme}"/>
-                    <Label Grid.Row="2" Grid.Column="0" Content="雷数：" Foreground="{StaticResource TextTheme}" FontSize="48"/>
+                    <Label Grid.Row="2" Grid.Column="0" Content="寄数：" Foreground="{StaticResource TextTheme}" FontSize="48"/>
                     <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MineSize}" VerticalAlignment="Center" FontSize="48" Foreground="{StaticResource TextTheme}"/>
                     <Label Grid.Row="3" Grid.Column="0" Content="用时：" Foreground="{StaticResource TextTheme}" FontSize="48"/>
                     <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Time,StringFormat={}{0:f3}}" VerticalAlignment="Center" FontSize="48" Foreground="{StaticResource TextTheme}"/>

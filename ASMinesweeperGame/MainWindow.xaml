@@ -51,7 +51,7 @@
             </Grid.RowDefinitions>
             <Button Grid.Row="0" Height="40" Content="=" VerticalAlignment="Top" Style="{StaticResource TitleButton}" Click="ExpandSetterPanel_Click"/>
             <View:GameSetterControlPanel Grid.Row="1" x:Name="SetterPanel" GameTheme="{Binding Path=Theme,ElementName=Self}" Opacity="0" StartGame="StartGame_Click"/>
-            <Label Grid.Row="2" Height="50" Content="{Binding Game.GameProcess}" ToolTip="剩余雷数（总雷数 - 标记数）" FontSize="16" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="{StaticResource TextTheme}"/>
+            <Label Grid.Row="2" Height="50" Content="{Binding Game.GameProcess}" ToolTip="剩余寄数（总寄数 - 标记数）" FontSize="16" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="{StaticResource TextTheme}"/>
         </Grid>
         <Grid Grid.Column="1">
             <Image Source="{Binding Theme,Converter={StaticResource GameThemeToBackground}}" Stretch="UniformToFill" HorizontalAlignment="Center" MouseLeftButtonDown="Window_Move"/>

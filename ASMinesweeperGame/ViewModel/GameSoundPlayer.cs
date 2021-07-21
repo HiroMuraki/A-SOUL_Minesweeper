@@ -12,7 +12,7 @@ namespace ASMinesweeperGame.ViewModel {
         private readonly List<Uri> _openFXSound; // 点击音效
         private readonly List<Uri> _quickOpenFXSound; // 双击音效
         private readonly List<Uri> _flagFXSound; // 标旗音效
-        private readonly List<Uri> _mineFXSound; // 雷音效
+        private readonly List<Uri> _mineFXSound; // 寄音效
         private readonly List<Uri> _gameMusic; // 背景音乐
         //private readonly List<Uri> _avaSkillSounds; // 向晚技能音效
         //private readonly List<Uri> _bellaSkillSounds; // 贝拉技能音效
@@ -22,7 +22,7 @@ namespace ASMinesweeperGame.ViewModel {
         private readonly MediaPlayer _openSoundPlayer; // 点击技能音播放器
         private readonly MediaPlayer _quickOpenSoundPlayer; // 双击音效播放器
         private readonly MediaPlayer _flagSoundPlayer; // 标旗音效播放器
-        private readonly MediaPlayer _mineSoundPlayer; // 雷音效播放器
+        private readonly MediaPlayer _mineSoundPlayer; // 寄音效播放器
         private readonly MediaPlayer _musicSoundPlayer; // 背景音乐播放器
         //private readonly MediaPlayer _gameCompletedSoundPlayer; // 结算音播放器
         //private readonly MediaPlayer _skillActivedSoundPlayer; // 技能启动音播放器

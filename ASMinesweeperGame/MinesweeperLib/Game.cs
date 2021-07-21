@@ -91,11 +91,11 @@ namespace ASMinesweeperGame.MinesweeperLib {
 
         #region 公共属性
         /// <summary>
-        /// 设置游戏的行数，列数和雷数
+        /// 设置游戏的行数，列数和寄数
         /// </summary>
         /// <param name="rowSize">行数</param>
         /// <param name="columnSize">列数</param>
-        /// <param name="mineSize">雷数</param>
+        /// <param name="mineSize">寄数</param>
         public void Start(int rowSize, int columnSize, int mineSize) {
             // 设置基本游戏信息
             _rowSize = rowSize;
@@ -110,7 +110,7 @@ namespace ASMinesweeperGame.MinesweeperLib {
                     Coordinate coordinate = new Coordinate(row, col);
                     // 创建block
                     _blocks[coordinate] = new MBlock(coordinate);
-                    // 前n个方块设置为地雷
+                    // 前n个方块设置为地寄
                     if (row * ColumnSize + col < MineSize) {
                         _blocks[coordinate].Type = BlockType.Mine;
                     }
@@ -177,7 +177,7 @@ namespace ASMinesweeperGame.MinesweeperLib {
             OnPropertyChanged(nameof(GameProcess));
         }
         /// <summary>
-        /// 打开指定方块，为递归打开（扫雷左键）
+        /// 打开指定方块，为递归打开（扫寄左键）
         /// </summary>
         /// <param name="block">待打开的方块坐标</param>
         public void OpenBlock(MBlock block) {
@@ -196,14 +196,14 @@ namespace ASMinesweeperGame.MinesweeperLib {
             }
         }
         /// <summary>
-        /// 打开指定方块周围的方块（扫雷左键双击）
+        /// 打开指定方块周围的方块（扫寄左键双击）
         /// </summary>
         /// <param name="block">中心方块</param>
         public void OpenNearBlocks(MBlock block) {
             // 仅已经打开的方块可触发
             if (block.IsOpen) {
                 int nearFlagedBlocks = GetNearCounts(block.Coordinate, (Coordinate nCoordinate) => _blocks[nCoordinate].IsFlaged);
-                // 如果标旗数大于了该方块的周围雷数，则触发
+                // 如果标旗数大于了该方块的周围寄数，则触发
                 if (nearFlagedBlocks >= block.NearMinesNum) {
                     foreach (Coordinate nearCoordinate in GetNearCoordinates(block.Coordinate)) {
                         OpenBlockHelper(_blocks[nearCoordinate]);
@@ -217,7 +217,7 @@ namespace ASMinesweeperGame.MinesweeperLib {
             }
         }
         /// <summary>
-        /// 为指定方块插旗（扫雷右键）
+        /// 为指定方块插旗（扫寄右键）
         /// </summary>
         /// <param name="block">待插旗的方块坐标</param>
         public void FlagBlock(MBlock block) {
@@ -254,7 +254,7 @@ namespace ASMinesweeperGame.MinesweeperLib {
             OnPropertyChanged(nameof(BlockArray));
         }
         /// <summary>
-        /// 打开指定方块，为递归打开（扫雷左键）
+        /// 打开指定方块，为递归打开（扫寄左键）
         /// </summary>
         /// <param name="block">待打开的方块坐标</param>
         public void OpenBlockHelper(MBlock block) {
@@ -264,11 +264,11 @@ namespace ASMinesweeperGame.MinesweeperLib {
             }
             // 将IsOpen设置为True
             block.IsOpen = true;
-            // 如果是雷的话，打开后返回
+            // 如果是寄的话，打开后返回
             if (block.Type == BlockType.Mine) {
                 return;
             }
-            // 如果该方块周围没有雷的话，则递归打开四周的八个方块
+            // 如果该方块周围没有寄的话，则递归打开四周的八个方块
             if (block.NearMinesNum == 0) {
                 foreach (Coordinate nearCoordinate in GetNearCoordinates(block.Coordinate)) {
                     OpenBlockHelper(_blocks[nearCoordinate]);
@@ -276,11 +276,11 @@ namespace ASMinesweeperGame.MinesweeperLib {
             }
         }
         /// <summary>
-        /// 启用方块保护，指定方块周围的8个坐标与自身坐标将不会有雷，用于首开保护
+        /// 启用方块保护，指定方块周围的8个坐标与自身坐标将不会有寄，用于首开保护
         /// </summary>
         /// <param name="block">待保护的坐标方块</param>
         private void SetSafeArea(Coordinate safeCenter) {
-            // 如果block不是雷且周围雷数为0，则跳过
+            // 如果block不是寄且周围寄数为0，则跳过
             if (_blocks[safeCenter].Type == BlockType.Blank && _blocks[safeCenter].NearMinesNum == 0) {
                 return;
             }
@@ -385,7 +385,7 @@ namespace ASMinesweeperGame.MinesweeperLib {
             // 默认游戏为完成状态
             bool? completed = true;
             foreach (var item in BlockArray) {
-                // 如果有雷被打开，直接判定为false
+                // 如果有寄被打开，直接判定为false
                 if (item.Type == BlockType.Mine && item.IsOpen) {
                     completed = false;
                     break;
