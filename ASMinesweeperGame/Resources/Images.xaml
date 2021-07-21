@@ -1,0 +1,4 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Image x:Key="FlagMark" Source="/ASMinesweeperGame;component/Resources/Images/FlagMark.png"/>
+</ResourceDictionary>

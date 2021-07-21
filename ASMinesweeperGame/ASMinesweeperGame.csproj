@@ -1,0 +1,99 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <StartupObject>ASMinesweeperGame.App</StartupObject>
+    <ApplicationIcon>Resources\ICO.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\ICO.ico" />
+    <None Remove="Resources\Images\Background_ASTheme.jpg" />
+    <None Remove="Resources\Images\Background_AvaTheme.jpg" />
+    <None Remove="Resources\Images\Background_BellaTheme.jpg" />
+    <None Remove="Resources\Images\Background_CarolTheme.jpg" />
+    <None Remove="Resources\Images\Background_DianaTheme.jpg" />
+    <None Remove="Resources\Images\Background_EileenTheme.jpg" />
+    <None Remove="Resources\Images\BlockBase.png" />
+    <None Remove="Resources\Images\BlockCover_ASTheme.png" />
+    <None Remove="Resources\Images\BlockCover_AvaTheme.png" />
+    <None Remove="Resources\Images\BlockCover_BellaTheme.png" />
+    <None Remove="Resources\Images\BlockCover_CarolTheme.png" />
+    <None Remove="Resources\Images\BlockCover_DianaTheme.png" />
+    <None Remove="Resources\Images\BlockCover_EileenTheme.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark1.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark10.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark11.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark12.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark13.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark14.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark15.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark16.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark17.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark18.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark19.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark2.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark20.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark3.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark4.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark5.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark6.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark7.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark8.png" />
+    <None Remove="Resources\Images\FlagMarks\FlagMark9.png" />
+    <None Remove="Resources\Images\FlagMark_ASTheme.png" />
+    <None Remove="Resources\Images\FlagMark_AvaTheme.png" />
+    <None Remove="Resources\Images\FlagMark_BellaTheme.png" />
+    <None Remove="Resources\Images\FlagMark_CarolTheme.png" />
+    <None Remove="Resources\Images\FlagMark_DianaTheme.png" />
+    <None Remove="Resources\Images\FlagMark_EileenTheme.png" />
+    <None Remove="Resources\Images\MineMark.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\ICO.ico" />
+    <Resource Include="Resources\Images\Background_ASTheme.jpg" />
+    <Resource Include="Resources\Images\Background_AvaTheme.jpg" />
+    <Resource Include="Resources\Images\Background_BellaTheme.jpg" />
+    <Resource Include="Resources\Images\Background_CarolTheme.jpg" />
+    <Resource Include="Resources\Images\Background_DianaTheme.jpg" />
+    <Resource Include="Resources\Images\Background_EileenTheme.jpg" />
+    <Resource Include="Resources\Images\BlockBase.png" />
+    <Resource Include="Resources\Images\BlockCover_ASTheme.png" />
+    <Resource Include="Resources\Images\BlockCover_AvaTheme.png" />
+    <Resource Include="Resources\Images\BlockCover_BellaTheme.png" />
+    <Resource Include="Resources\Images\BlockCover_CarolTheme.png" />
+    <Resource Include="Resources\Images\BlockCover_DianaTheme.png" />
+    <Resource Include="Resources\Images\BlockCover_EileenTheme.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark1.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark10.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark11.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark12.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark13.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark14.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark15.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark16.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark17.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark18.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark19.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark2.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark20.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark3.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark4.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark5.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark6.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark7.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark8.png" />
+    <Resource Include="Resources\Images\FlagMarks\FlagMark9.png" />
+    <Resource Include="Resources\Images\FlagMark_DianaTheme.png" />
+    <Resource Include="Resources\Images\FlagMark_ASTheme.png" />
+    <Resource Include="Resources\Images\FlagMark_CarolTheme.png" />
+    <Resource Include="Resources\Images\FlagMark_BellaTheme.png" />
+    <Resource Include="Resources\Images\FlagMark_AvaTheme.png" />
+    <Resource Include="Resources\Images\FlagMark_EileenTheme.png" />
+    <Resource Include="Resources\Images\MineMark.png" />
+  </ItemGroup>
+
+</Project>
