@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ASMinesweeperGame": {
+      "commandName": "Project",
+      "commandLineArgs": "-row 6 -col 10 -mine 15"
+    }
+  }
+}

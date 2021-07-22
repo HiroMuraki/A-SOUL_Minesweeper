@@ -6,26 +6,19 @@ using System.Windows.Media;
 namespace ASMinesweeperGame.ViewModel {
     public class GameSoundPlayer {
         private static GameSoundPlayer _singletonObject;
-        private static object _singletonLocker = new object();
-        private string _gameSoundDirectory;
+        private static readonly object _singletonLocker = new object();
         private readonly Random _rnd;
         private readonly List<Uri> _openFXSound; // 点击音效
         private readonly List<Uri> _quickOpenFXSound; // 双击音效
         private readonly List<Uri> _flagFXSound; // 标旗音效
         private readonly List<Uri> _mineFXSound; // 寄音效
         private readonly List<Uri> _gameMusic; // 背景音乐
-        //private readonly List<Uri> _avaSkillSounds; // 向晚技能音效
-        //private readonly List<Uri> _bellaSkillSounds; // 贝拉技能音效
-        //private readonly List<Uri> _carolSkillSounds; // 珈乐技能音效
-        //private readonly List<Uri> _dianaSkillSounds; // 嘉然技能音效
-        //private readonly List<Uri> _eileenSkillSounds; // 乃琳技能音效
         private readonly MediaPlayer _openSoundPlayer; // 点击技能音播放器
         private readonly MediaPlayer _quickOpenSoundPlayer; // 双击音效播放器
         private readonly MediaPlayer _flagSoundPlayer; // 标旗音效播放器
         private readonly MediaPlayer _mineSoundPlayer; // 寄音效播放器
         private readonly MediaPlayer _musicSoundPlayer; // 背景音乐播放器
-        //private readonly MediaPlayer _gameCompletedSoundPlayer; // 结算音播放器
-        //private readonly MediaPlayer _skillActivedSoundPlayer; // 技能启动音播放器
+        private string _gameSoundDirectory;
 
         public string GameSoundDirectory {
             get {
@@ -91,7 +84,7 @@ namespace ASMinesweeperGame.ViewModel {
                     _flagFXSound.Add(soundUri);
                 }
                 else if (fileName.StartsWith("MINE")) {
-                    _flagFXSound.Add(soundUri);
+                    _mineFXSound.Add(soundUri);
                 }
                 else if (fileName.StartsWith("MUSIC")) {
                     _gameMusic.Add(soundUri);
@@ -131,6 +124,27 @@ namespace ASMinesweeperGame.ViewModel {
         public void PlayMusic() {
             RandomPlay(_musicSoundPlayer, _gameMusic);
         }
+
+        private void RandomPlay(MediaPlayer player, List<Uri> resources) {
+            // 音频列表资源为0则跳过播放
+            if (resources.Count <= 0) {
+                return;
+            }
+            // 否则随机打开一个并播放
+            player.Open(resources[_rnd.Next(0, resources.Count)]);
+            player.Play();
+        }
+        private void MusicSoundPlayer_MediaEnded(object sender, EventArgs e) {
+            PlayMusic();
+        }
+
+        //private readonly List<Uri> _avaSkillSounds; // 向晚技能音效
+        //private readonly List<Uri> _bellaSkillSounds; // 贝拉技能音效
+        //private readonly List<Uri> _carolSkillSounds; // 珈乐技能音效
+        //private readonly List<Uri> _dianaSkillSounds; // 嘉然技能音效
+        //private readonly List<Uri> _eileenSkillSounds; // 乃琳技能音效
+        //private readonly MediaPlayer _gameCompletedSoundPlayer; // 结算音播放器
+        //private readonly MediaPlayer _skillActivedSoundPlayer; // 技能启动音播放器
         //public void PlayGameCompletedSound() {
         //    RandomPlay(_gameCompletedSoundPlayer, _flagFXSound);
         //}
@@ -158,18 +172,5 @@ namespace ASMinesweeperGame.ViewModel {
         //    }
         //    _skillActivedSoundPlayer.Play();
         //}
-
-        private void RandomPlay(MediaPlayer player, List<Uri> resources) {
-            // 音频列表资源为0则跳过播放
-            if (resources.Count <= 0) {
-                return;
-            }
-            // 否则随机打开一个并播放
-            player.Open(resources[_rnd.Next(0, resources.Count)]);
-            player.Play();
-        }
-        private void MusicSoundPlayer_MediaEnded(object sender, EventArgs e) {
-            PlayMusic();
-        }
     }
 }

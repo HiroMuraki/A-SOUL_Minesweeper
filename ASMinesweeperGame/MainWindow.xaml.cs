@@ -42,7 +42,7 @@ namespace ASMinesweeperGame {
             InitializeComponent();
             GridRoot.MaxHeight = SystemParameters.WorkArea.Height + 1;
             GridRoot.MaxWidth = SystemParameters.WorkArea.Width + 1;
-            StartGame_Click(null, new StartGameEventArgs(StartGameInfo.Easy));
+            StartGame_Click(null, new StartGameEventArgs(StartGameInfo.Custom));
             ExpandSetterPanel();
         }
 
@@ -50,7 +50,7 @@ namespace ASMinesweeperGame {
             try {
                 Theme = GameSetter.GetRandomTheme();
                 GameSetter.SwitchDiffcult(e.StartInfo);
-                Game.Start(GameSetter.RowSize, GameSetter.ColumnSize, GameSetter.MinesSize);
+                Game.Start(GameSetter.RowSize, GameSetter.ColumnSize, GameSetter.MineSize);
                 GameStatistics.Hide();
                 GameRemaker.Hide();
             }

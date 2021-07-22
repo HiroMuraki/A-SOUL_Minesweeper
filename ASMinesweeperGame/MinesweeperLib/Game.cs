@@ -9,6 +9,7 @@ namespace ASMinesweeperGame.MinesweeperLib {
     public class Game : INotifyPropertyChanged {
         #region 后备字段
         private static Game _singletonInstance;
+        private static readonly object _singletonLocker = new object();
         private int _rowSize;
         private int _columnSize;
         private int _minesSize;
@@ -83,7 +84,11 @@ namespace ASMinesweeperGame.MinesweeperLib {
         }
         public static Game GetInstance() {
             if (_singletonInstance == null) {
-                _singletonInstance = new Game();
+                lock (_singletonLocker) {
+                    if (_singletonInstance == null) {
+                        _singletonInstance = new Game();
+                    }
+                }
             }
             return _singletonInstance;
         }

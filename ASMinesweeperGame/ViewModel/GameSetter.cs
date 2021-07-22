@@ -12,9 +12,10 @@ namespace ASMinesweeperGame.ViewModel {
     public class GameSetter : INotifyPropertyChanged {
         #region 后备字段
         private static GameSetter _singletonInstance;
+        private readonly static object _singletonLocker = new object();
         private int _rowSize;
         private int _columnSize;
-        private int _minesSize;
+        private int _mineSize;
         private GameTheme _gameTheme;
         #endregion
 
@@ -40,7 +41,7 @@ namespace ASMinesweeperGame.ViewModel {
                 _rowSize = value;
                 OnPropertyChanged(nameof(RowSize));
                 OnPropertyChanged(nameof(MaxMinesSize));
-                OnPropertyChanged(nameof(MinesSize));
+                OnPropertyChanged(nameof(MineSize));
             }
         }
         public int ColumnSize {
@@ -51,21 +52,21 @@ namespace ASMinesweeperGame.ViewModel {
                 _columnSize = value;
                 OnPropertyChanged(nameof(ColumnSize));
                 OnPropertyChanged(nameof(MaxMinesSize));
-                OnPropertyChanged(nameof(MinesSize));
+                OnPropertyChanged(nameof(MineSize));
             }
         }
-        public int MinesSize {
+        public int MineSize {
             get {
-                return _minesSize;
+                return _mineSize;
             }
             set {
-                _minesSize = value;
-                OnPropertyChanged(nameof(MinesSize));
+                _mineSize = value;
+                OnPropertyChanged(nameof(MineSize));
             }
         }
-        public int MinRowSize { get { return 9; } }
+        public int MinRowSize { get { return 6; } }
         public int MaxRowSize { get { return 20; } }
-        public int MinColumnSize { get { return 9; } }
+        public int MinColumnSize { get { return 6; } }
         public int MaxColumnSize { get { return 30; } }
         public int MinMinesSize { get { return _rowSize * _columnSize / 20; } }
         public int MaxMinesSize { get { return _rowSize * _columnSize / 4; } }
@@ -74,12 +75,16 @@ namespace ASMinesweeperGame.ViewModel {
         private GameSetter() {
             _rowSize = 9;
             _columnSize = 9;
-            _minesSize = 10;
+            _mineSize = 10;
             GameTheme = GameTheme.AS;
         }
         public static GameSetter GetInstance() {
             if (_singletonInstance == null) {
-                _singletonInstance = new GameSetter();
+                lock (_singletonLocker) {
+                    if (_singletonInstance == null) {
+                        _singletonInstance = new GameSetter();
+                    }
+                }
             }
             return _singletonInstance;
         }
@@ -186,17 +191,17 @@ namespace ASMinesweeperGame.ViewModel {
                 case StartGameInfo.Easy:
                     RowSize = 9;
                     ColumnSize = 9;
-                    MinesSize = 10;
+                    MineSize = 10;
                     break;
                 case StartGameInfo.Normal:
                     RowSize = 16;
                     ColumnSize = 16;
-                    MinesSize = 40;
+                    MineSize = 40;
                     break;
                 case StartGameInfo.Hard:
                     RowSize = 16;
                     ColumnSize = 30;
-                    MinesSize = 99;
+                    MineSize = 99;
                     break;
                 case StartGameInfo.Custom:
                     break;
