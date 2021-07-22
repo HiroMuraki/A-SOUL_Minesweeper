@@ -162,7 +162,7 @@ namespace ASMinesweeperGame.ViewModel {
                 }
             }
         }
-        public static void SaveLayout(IEnumerable<MBlock> layoutArray, int rowSize, int colSize, string filePath) {
+        public static void SaveLayout(IEnumerable<IBlock> layoutArray, int rowSize, int colSize, string filePath) {
             using (StreamWriter writer = new StreamWriter(filePath)) {
                 int col = 0;
                 int row = 0;

@@ -33,17 +33,23 @@ namespace ASMinesweeperGame {
 
         public Game Game { get; set; }
         public GameSetter GameSetter { get; set; }
+        public GameSoundPlayer GameSound { get; set; }
 
         public MainWindow() {
             Game = Game.GetInstance();
+            Game.BlockCreater = () => {
+                return new MBlock();
+            };
             GameSetter = GameSetter.GetInstance();
             Game.GameLayoutRested += Game_GameLayoutRested;
             Game.GameCompleted += Game_GameCompleted;
+            GameSound = GameSoundPlayer.GetInstance();
             InitializeComponent();
             GridRoot.MaxHeight = SystemParameters.WorkArea.Height + 1;
             GridRoot.MaxWidth = SystemParameters.WorkArea.Width + 1;
             StartGame_Click(null, new StartGameEventArgs(StartGameInfo.Custom));
             ExpandSetterPanel();
+            GameSound.PlayMusic();
         }
 
         private void StartGame_Click(object sender, StartGameEventArgs e) {
@@ -92,6 +98,7 @@ namespace ASMinesweeperGame {
             }
             else {
                 GameRemaker.Display();
+                GameSound.PlayMineFXSound();
             }
         }
         private void Game_GameLayoutRested(object sender, GameLayoutRestedEventArgs e) {
@@ -99,10 +106,11 @@ namespace ASMinesweeperGame {
             GameLayout.Rows = Game.RowSize;
             GameLayout.Columns = Game.ColumnSize;
             foreach (var block in Game.BlockArray) {
-                block.Theme = Theme;
-                block.PreviewMouseLeftButtonDown += Block_MouseLeftButtonDown;
-                block.PreviewMouseRightButtonDown += Block_MouseRightButtonDown;
-                GameLayout.Children.Add(block);
+                MBlock mBlock = (MBlock)block;
+                mBlock.Theme = Theme;
+                mBlock.PreviewMouseLeftButtonDown += Block_MouseLeftButtonDown;
+                mBlock.PreviewMouseRightButtonDown += Block_MouseRightButtonDown;
+                GameLayout.Children.Add(mBlock);
             }
         }
         private void ExpandSetterPanel_Click(object sender, RoutedEventArgs e) {
@@ -117,14 +125,17 @@ namespace ASMinesweeperGame {
         private void Block_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             if (e.ClickCount >= 2) {
                 Game.OpenNearBlocks(sender as MBlock);
+                GameSound.PlayOpenFXSound();
             }
             else {
                 Game.OpenBlock(sender as MBlock);
+                GameSound.PlayQuickOpenFXSound();
             }
             e.Handled = true;
         }
         private void Block_MouseRightButtonDown(object sender, MouseButtonEventArgs e) {
             Game.FlagBlock(sender as MBlock);
+            GameSound.PlayFlagFXSound();
             e.Handled = true;
         }
 

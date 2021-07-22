@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace ASMinesweeperGame.MinesweeperLib {
-    public class MBlock : Button {
+    public class MBlock : Button, IBlock {
         public static readonly DependencyProperty TypeProperty =
             DependencyProperty.Register(nameof(Type), typeof(BlockType), typeof(MBlock), new PropertyMetadata(BlockType.Blank));
         public static readonly DependencyProperty CoordinateProperty =
@@ -57,8 +57,8 @@ namespace ASMinesweeperGame.MinesweeperLib {
         static MBlock() {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MBlock), new FrameworkPropertyMetadata(typeof(MBlock)));
         }
-        public MBlock(Coordinate coordinate) {
-            Coordinate = coordinate;
+        public MBlock() {
+            Coordinate = new Coordinate(0, 0);
             IsFlaged = false;
             IsOpen = false;
             NearMinesNum = 0;

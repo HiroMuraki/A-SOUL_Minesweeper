@@ -16,7 +16,8 @@ namespace ASMinesweeperGame.MinesweeperLib {
         private int _flagsCount;
         private bool _isFirstOpen;
         private DateTime _startTime;
-        private Dictionary<Coordinate, MBlock> _blocks;
+        private Dictionary<Coordinate, IBlock> _blocks;
+        private Func<IBlock> _blockCreater;
         #endregion
 
         #region 公共事件
@@ -69,11 +70,19 @@ namespace ASMinesweeperGame.MinesweeperLib {
                 return $"{_minesSize - _flagsCount}";
             }
         }
-        public IEnumerable<MBlock> BlockArray {
+        public IEnumerable<IBlock> BlockArray {
             get {
                 foreach (var block in _blocks.Values) {
                     yield return block;
                 }
+            }
+        }
+        public Func<IBlock> BlockCreater {
+            private get {
+                return _blockCreater;
+            }
+            set {
+                _blockCreater = value;
             }
         }
         #endregion
@@ -109,12 +118,13 @@ namespace ASMinesweeperGame.MinesweeperLib {
             _flagsCount = 0;
             _isFirstOpen = true;
             // 初始化方块序列
-            _blocks = new Dictionary<Coordinate, MBlock>();
+            _blocks = new Dictionary<Coordinate, IBlock>();
             for (int row = 0; row < _rowSize; row++) {
                 for (int col = 0; col < _columnSize; col++) {
                     Coordinate coordinate = new Coordinate(row, col);
                     // 创建block
-                    _blocks[coordinate] = new MBlock(coordinate);
+                    _blocks[coordinate] = BlockCreater();
+                    _blocks[coordinate].Coordinate = coordinate;
                     // 前n个方块设置为地寄
                     if (row * ColumnSize + col < MineSize) {
                         _blocks[coordinate].Type = BlockType.Mine;
@@ -140,12 +150,13 @@ namespace ASMinesweeperGame.MinesweeperLib {
             _flagsCount = 0;
             _isFirstOpen = false;
             // 初始化方块序列
-            _blocks = new Dictionary<Coordinate, MBlock>();
+            _blocks = new Dictionary<Coordinate, IBlock>();
             for (int row = 0; row < _rowSize; row++) {
                 for (int col = 0; col < _columnSize; col++) {
                     Coordinate coordinate = new Coordinate(row, col);
                     // 根据布局信息创建block
-                    _blocks[coordinate] = new MBlock(coordinate);
+                    _blocks[coordinate] = BlockCreater();
+                    _blocks[coordinate].Coordinate = coordinate;
                     if (layout[row, col] == 0) {
                         _blocks[coordinate].Type = BlockType.Blank;
                     }
@@ -185,7 +196,7 @@ namespace ASMinesweeperGame.MinesweeperLib {
         /// 打开指定方块，为递归打开（扫寄左键）
         /// </summary>
         /// <param name="block">待打开的方块坐标</param>
-        public void OpenBlock(MBlock block) {
+        public void OpenBlock(IBlock block) {
             if (_isFirstOpen) {
                 _startTime = DateTime.Now;
                 Coordinate safeCoordinate = block.Coordinate;
@@ -204,7 +215,7 @@ namespace ASMinesweeperGame.MinesweeperLib {
         /// 打开指定方块周围的方块（扫寄左键双击）
         /// </summary>
         /// <param name="block">中心方块</param>
-        public void OpenNearBlocks(MBlock block) {
+        public void OpenNearBlocks(IBlock block) {
             // 仅已经打开的方块可触发
             if (block.IsOpen) {
                 int nearFlagedBlocks = GetNearCounts(block.Coordinate, (Coordinate nCoordinate) => _blocks[nCoordinate].IsFlaged);
@@ -225,7 +236,7 @@ namespace ASMinesweeperGame.MinesweeperLib {
         /// 为指定方块插旗（扫寄右键）
         /// </summary>
         /// <param name="block">待插旗的方块坐标</param>
-        public void FlagBlock(MBlock block) {
+        public void FlagBlock(IBlock block) {
             // 已打开的方块不可插旗
             if (block.IsOpen) {
                 return;
@@ -262,7 +273,7 @@ namespace ASMinesweeperGame.MinesweeperLib {
         /// 打开指定方块，为递归打开（扫寄左键）
         /// </summary>
         /// <param name="block">待打开的方块坐标</param>
-        public void OpenBlockHelper(MBlock block) {
+        public void OpenBlockHelper(IBlock block) {
             // 已经打开或被标记的块不可打开
             if (block.IsOpen || block.IsFlaged) {
                 return;
@@ -330,7 +341,7 @@ namespace ASMinesweeperGame.MinesweeperLib {
         /// <param name="a"></param>
         /// <param name="b"></param>
         private void SwapBlock(Coordinate a, Coordinate b) {
-            MBlock T = _blocks[a];
+            IBlock T = _blocks[a];
             _blocks[a] = _blocks[b];
             _blocks[a].Coordinate = a;
             _blocks[b] = T;
