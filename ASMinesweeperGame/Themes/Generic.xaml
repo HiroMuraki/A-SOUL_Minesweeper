@@ -20,16 +20,42 @@
                             <Image x:Name="BaseBackground" Source="/ASMinesweeperGame;component/Resources/Images/BlockBase.png" Opacity="0.85" />
                             <Label x:Name="NearMineNumMark" Visibility="Visible" FontSize="20" FontWeight="Bold" Foreground="{Binding Path=NearMinesNum,RelativeSource={RelativeSource Mode=TemplatedParent},Converter={StaticResource NearMinesNumToColor}}" Content="{Binding Path=NearMinesNum,RelativeSource={RelativeSource Mode=TemplatedParent}}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
                             <Image x:Name="MineMark" Visibility="Hidden" Source="/ASMinesweeperGame;component/Resources/Images/MineMark.png"/>
-                            <Image x:Name="BlockCover" Visibility="Visible" Source="{Binding Theme,RelativeSource={RelativeSource Mode=TemplatedParent},Converter={StaticResource GameThemeToBlockCover}}"/>
-                            <Image x:Name="FlagMark" Visibility="Hidden" Margin="5" Source="{Binding Theme,RelativeSource={RelativeSource Mode=TemplatedParent},Converter={StaticResource GameThemeToFlagMark}}"/>
+                            <Image x:Name="BlockCover" Opacity="1" Source="{Binding Theme,RelativeSource={RelativeSource Mode=TemplatedParent},Converter={StaticResource GameThemeToBlockCover}}"/>
+                            <Image x:Name="FlagMark" Margin="5" Opacity="0" Source="{Binding Theme,RelativeSource={RelativeSource Mode=TemplatedParent},Converter={StaticResource GameThemeToFlagMark}}"/>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsOpen" Value="True">
-                            <Setter TargetName="BlockCover" Property="Visibility" Value="Hidden" />
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard Storyboard.TargetName="BlockCover" Storyboard.TargetProperty="Opacity">
+                                        <DoubleAnimation To="0" AccelerationRatio="0.2" DecelerationRatio="0.8" Duration="0:0:0.075"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard Storyboard.TargetName="BlockCover" Storyboard.TargetProperty="Opacity">
+                                        <DoubleAnimation To="1" AccelerationRatio="0.2" DecelerationRatio="0.8" Duration="0:0:0.075"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
                         </Trigger>
                         <Trigger Property="IsFlaged" Value="True">
-                            <Setter TargetName="FlagMark" Property="Visibility" Value="Visible" />
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard Storyboard.TargetName="FlagMark" Storyboard.TargetProperty="Opacity">
+                                        <DoubleAnimation To="1" AccelerationRatio="0.2" DecelerationRatio="0.8" Duration="0:0:0.05"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard Storyboard.TargetName="FlagMark" Storyboard.TargetProperty="Opacity">
+                                        <DoubleAnimation To="0" AccelerationRatio="0.2" DecelerationRatio="0.8" Duration="0:0:0.05"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
                         </Trigger>
                         <Trigger Property="Type" Value="Mine">
                             <Setter TargetName="NearMineNumMark" Property="Visibility" Value="Hidden" />
