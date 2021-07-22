@@ -74,10 +74,10 @@ namespace ASMinesweeperGame.ViewModel {
                 if (!(Path.GetExtension(fileName) == ".MP3")) {
                     continue;
                 }
-                if (fileName.StartsWith("Open")) {
+                if (fileName.StartsWith("OPEN")) {
                     _openFXSound.Add(soundUri);
                 }
-                else if (fileName.StartsWith("QOpen")) {
+                else if (fileName.StartsWith("QOPEN")) {
                     _quickOpenFXSound.Add(soundUri);
                 }
                 else if (fileName.StartsWith("FLAG")) {
