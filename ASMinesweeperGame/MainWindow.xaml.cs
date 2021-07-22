@@ -1,23 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Effects;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using ASMinesweeperGame.MinesweeperLib;
+﻿using ASMinesweeperGame.MinesweeperLib;
 using ASMinesweeperGame.ViewModel;
 using Microsoft.Win32;
+using System;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media.Animation;
 
 namespace ASMinesweeperGame {
     /// <summary>
@@ -125,11 +112,11 @@ namespace ASMinesweeperGame {
         private void Block_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             if (e.ClickCount >= 2) {
                 Game.OpenNearBlocks(sender as MBlock);
-                GameSound.PlayOpenFXSound();
+                GameSound.PlayQuickOpenFXSound();
             }
             else {
                 Game.OpenBlock(sender as MBlock);
-                GameSound.PlayQuickOpenFXSound();
+                GameSound.PlayOpenFXSound();
             }
             e.Handled = true;
         }

@@ -11,7 +11,7 @@ namespace ASMinesweeperGame.View {
     public partial class TipBar : UserControl {
         public object Tip {
             get {
-                return (object)GetValue(TipProperty);
+                return GetValue(TipProperty);
             }
             set {
                 SetValue(TipProperty, value);

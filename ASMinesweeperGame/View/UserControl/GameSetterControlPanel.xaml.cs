@@ -1,7 +1,7 @@
-﻿using System;
+﻿using ASMinesweeperGame.ViewModel;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using ASMinesweeperGame.ViewModel;
 
 namespace ASMinesweeperGame.View {
     /// <summary>
@@ -14,7 +14,7 @@ namespace ASMinesweeperGame.View {
             DependencyProperty.Register(nameof(GameTheme), typeof(GameTheme), typeof(GameSetterControlPanel), new PropertyMetadata(GameTheme.AS));
 
         public event EventHandler<StartGameEventArgs> StartGame;
-        
+
         public GameTheme GameTheme {
             get { return (GameTheme)GetValue(GameThemeProperty); }
             set { SetValue(GameThemeProperty, value); }

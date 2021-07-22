@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
-using ASMinesweeperGame;
 
 namespace ASMinesweeperGame.ViewModel.ValueConverter {
     [ValueConversion(typeof(GameTheme), typeof(Brush))]
