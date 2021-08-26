@@ -178,6 +178,7 @@ namespace ASMinesweeperGame {
             };
             SetterArea.BeginAnimation(WidthProperty, widthAnimation);
             SetterPanel.BeginAnimation(OpacityProperty, opacityAnimation);
+            SetterPanel.IsHitTestVisible = false;
         }
         private void ExpandSetterPanel() {
             DoubleAnimation widthAnimation = new DoubleAnimation() {
@@ -194,6 +195,7 @@ namespace ASMinesweeperGame {
             };
             SetterArea.BeginAnimation(WidthProperty, widthAnimation);
             SetterPanel.BeginAnimation(OpacityProperty, opacityAnimation);
+            SetterPanel.IsHitTestVisible = true;  
         }
         private void RestoreGame(string layoutFile) {
             try {
