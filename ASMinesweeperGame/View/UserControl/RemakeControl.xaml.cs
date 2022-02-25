@@ -16,7 +16,6 @@ namespace ASMinesweeperGame.View {
 
         public event EventHandler<RemakeEventArgs>? Remake;
         public event EventHandler<RemakeEventArgs>? PasswordError;
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Password
