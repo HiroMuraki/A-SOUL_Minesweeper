@@ -1,5 +1,5 @@
 ﻿namespace ASMinesweeperGame.MinesweeperLib {
-    public interface IBlock {
+    public interface IBlock : IResetable {
         GameTheme Theme { get; set; }
         BlockType Type { get; set; }
         Coordinate Coordinate { get; set; }

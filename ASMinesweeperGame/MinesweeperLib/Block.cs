@@ -64,14 +64,18 @@ namespace ASMinesweeperGame.MinesweeperLib {
         }
         #endregion
 
+        public void Reset() {
+
+        }
+        public void OnPropertyChanged(string propertyName) {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         private GameTheme _theme;
         private BlockType _type;
         private Coordinate _coordinate;
         private bool _isFlaged;
         private bool _isOpen;
         private int _nearMinesNum;
-        private void OnPropertyChanged(string propertyName) {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

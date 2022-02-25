@@ -42,6 +42,12 @@ namespace ASMinesweeperGame.MinesweeperLib {
             set { SetValue(NearMinesNumProperty, value); }
         }
 
+        public void Reset() {
+            Type = BlockType.Blank;
+            IsFlaged = false;
+            IsOpen = false;
+        }
+
         static MBlock() {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MBlock), new FrameworkPropertyMetadata(typeof(MBlock)));
         }

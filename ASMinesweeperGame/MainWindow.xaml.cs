@@ -2,6 +2,7 @@
 using ASMinesweeperGame.ViewModel;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
@@ -11,10 +12,6 @@ namespace ASMinesweeperGame {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        public GameTheme Theme {
-            get { return (GameTheme)GetValue(ThemeProperty); }
-            set { SetValue(ThemeProperty, value); }
-        }
         public static readonly DependencyProperty ThemeProperty =
             DependencyProperty.Register(nameof(Theme), typeof(GameTheme), typeof(MainWindow), new PropertyMetadata(GameTheme.AS));
 
@@ -25,13 +22,25 @@ namespace ASMinesweeperGame {
         public RoutedCommand CloseWindow { get; } = new RoutedCommand();
         public RoutedCommand ExpandSetterPanel { get; } = new RoutedCommand();
 
+        public GameTheme Theme {
+            get { return (GameTheme)GetValue(ThemeProperty); }
+            set { SetValue(ThemeProperty, value); }
+        }
         public Game Game { get; } = Game.Instance;
         public GameSetter GameSetter { get; } = GameSetter.Instance;
         public GameSoundPlayer GameSound { get; } = GameSoundPlayer.Instance;
 
         public MainWindow() {
             RegistCommands();
+            _blockPools.InitCount = GameSetter.MinRowSize * GameSetter.MinColumnSize;
+            _blockPools.MaxCount = GameSetter.MaxRowSize * GameSetter.MaxColumnSize;
+            _blockPools.Initialization();
             Game.BlockCreater = () => {
+                if (_blockPools.TryFetch(out var block)) {
+                    System.Diagnostics.Debug.WriteLine("Load from pool");
+                    return block;
+                }
+                System.Diagnostics.Debug.WriteLine("new");
                 return new MBlock();
             };
             Game.GameLayoutRested += Game_GameLayoutRested;
@@ -44,6 +53,8 @@ namespace ASMinesweeperGame {
             GameSound.PlayMusic();
         }
 
+        private readonly ObjectPool<MBlock> _blockPools = new ObjectPool<MBlock>();
+        private readonly List<MBlock> _createdBlocks = new List<MBlock>();
         private void StartGame_Click(object sender, StartGameEventArgs e) {
             try {
                 Theme = GameSetter.GetRandomTheme();
@@ -79,6 +90,10 @@ namespace ASMinesweeperGame {
         }
         private void Game_GameLayoutRested(object? sender, GameLayoutRestedEventArgs e) {
             GameLayout.Children.Clear();
+            foreach (var block in _createdBlocks) {
+                _blockPools.TryReturn(block);
+            }
+            _createdBlocks.Clear();
             GameLayout.Rows = Game.RowSize;
             GameLayout.Columns = Game.ColumnSize;
             foreach (var block in Game.BlockArray) {
@@ -86,6 +101,7 @@ namespace ASMinesweeperGame {
                 mBlock.Theme = Theme;
                 mBlock.PreviewMouseLeftButtonDown += Block_MouseLeftButtonDown;
                 mBlock.PreviewMouseRightButtonDown += Block_MouseRightButtonDown;
+                _createdBlocks.Add(mBlock);
                 GameLayout.Children.Add(mBlock);
             }
         }

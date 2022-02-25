@@ -21,7 +21,7 @@ namespace ASMinesweeperGame.ViewModel.ValueConverter {
         }
 
         private static readonly Dictionary<GameTheme, Brush> _resources = new Dictionary<GameTheme, Brush> {
-            [GameTheme.AS] = (Brush)App.ColorDict["AvaTheme"],
+            [GameTheme.AS] = (Brush)App.ColorDict["ASTheme"],
             [GameTheme.Ava] = (Brush)App.ColorDict["AvaTheme"],
             [GameTheme.Bella] = (Brush)App.ColorDict["BellaTheme"],
             [GameTheme.Carol] = (Brush)App.ColorDict["CarolTheme"],

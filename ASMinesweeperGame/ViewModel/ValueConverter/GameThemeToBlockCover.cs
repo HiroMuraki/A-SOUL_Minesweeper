@@ -20,7 +20,7 @@ namespace ASMinesweeperGame.ViewModel.ValueConverter {
         }
 
         private static readonly Dictionary<GameTheme, Uri> _resources = new Dictionary<GameTheme, Uri> {
-            [GameTheme.AS] = new Uri($"/ASMinesweeperGame;component/Resources/Images/BlockCovers/AvaTheme.png", UriKind.Relative),
+            [GameTheme.AS] = new Uri($"/ASMinesweeperGame;component/Resources/Images/BlockCovers/ASTheme.png", UriKind.Relative),
             [GameTheme.Ava] = new Uri($"/ASMinesweeperGame;component/Resources/Images/BlockCovers/AvaTheme.png", UriKind.Relative),
             [GameTheme.Bella] = new Uri($"/ASMinesweeperGame;component/Resources/Images/BlockCovers/BellaTheme.png", UriKind.Relative),
             [GameTheme.Carol] = new Uri($"/ASMinesweeperGame;component/Resources/Images/BlockCovers/CarolTheme.png", UriKind.Relative),
