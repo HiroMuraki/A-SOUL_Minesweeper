@@ -2,13 +2,9 @@
 
 namespace ASMinesweeperGame.MinesweeperLib {
     public class Block : IBlock, INotifyPropertyChanged {
-        #region 后备字段
-        private GameTheme _theme;
-        private BlockType _type;
-        private Coordinate _coordinate;
-        private bool _isFlaged;
-        private bool _isOpen;
-        private int _nearMinesNum;
+        #region 事件
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         #endregion
 
         #region 公共属性
@@ -68,13 +64,12 @@ namespace ASMinesweeperGame.MinesweeperLib {
         }
         #endregion
 
-        #region 构造方法
-        public Block() {
-
-        }
-        #endregion
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        private GameTheme _theme;
+        private BlockType _type;
+        private Coordinate _coordinate;
+        private bool _isFlaged;
+        private bool _isOpen;
+        private int _nearMinesNum;
         private void OnPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

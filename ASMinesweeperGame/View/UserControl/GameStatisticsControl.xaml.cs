@@ -8,47 +8,22 @@ namespace ASMinesweeperGame.View {
     /// GameStatisticsControl.xaml 的交互逻辑
     /// </summary>
     public partial class GameStatisticsControl : UserControl, INotifyPropertyChanged {
-        private int _rowSize;
-        private int _columnSize;
-        private int _mineSize;
-        private TimeSpan _time;
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         private void OnPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public int RowSize {
-            get {
-                return _rowSize;
-            }
-        }
-        public int ColumnSize {
-            get {
-                return _columnSize;
-            }
-        }
-        public int MineSize {
-            get {
-                return _mineSize;
-            }
-        }
-        public double Time {
-            get {
-                return _time.TotalSeconds;
-            }
-        }
-
-        public GameStatisticsControl() {
-            InitializeComponent();
-        }
+        public int RowSize { get; private set; }
+        public int ColumnSize { get; private set; }
+        public int MineSize { get; private set; }
+        public double Time { get; private set; }
 
         public void Display(int rowSize, int columnSize, int mineSize, TimeSpan time) {
             IsHitTestVisible = true;
-            _rowSize = rowSize;
-            _columnSize = columnSize;
-            _mineSize = mineSize;
-            _time = time;
+            RowSize = rowSize;
+            ColumnSize = columnSize;
+            MineSize = mineSize;
+            Time = time.TotalSeconds;
             OnPropertyChanged(nameof(RowSize));
             OnPropertyChanged(nameof(ColumnSize));
             OnPropertyChanged(nameof(MineSize));
@@ -70,6 +45,10 @@ namespace ASMinesweeperGame.View {
                 Duration = TimeSpan.FromMilliseconds(200)
             };
             BeginAnimation(OpacityProperty, animation);
+        }
+
+        public GameStatisticsControl() {
+            InitializeComponent();
         }
     }
 }

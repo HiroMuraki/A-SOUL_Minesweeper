@@ -7,17 +7,10 @@ using System.Text.RegularExpressions;
 
 namespace ASMinesweeperGame.ViewModel {
     public class GameSetter : INotifyPropertyChanged {
-        #region 后备字段
-        private static GameSetter _singletonInstance;
-        private readonly static object _singletonLocker = new object();
-        private int _rowSize;
-        private int _columnSize;
-        private int _mineSize;
-        private GameTheme _gameTheme;
-        #endregion
+        public static GameSetter Instance { get; } = new GameSetter();
 
         #region 公开事件
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         #endregion
 
         #region 公共属性
@@ -69,26 +62,8 @@ namespace ASMinesweeperGame.ViewModel {
         public int MaxMinesSize { get { return _rowSize * _columnSize / 4; } }
         #endregion
 
-        private GameSetter() {
-            _rowSize = 9;
-            _columnSize = 9;
-            _mineSize = 10;
-            GameTheme = GameTheme.AS;
-        }
-        public static GameSetter GetInstance() {
-            if (_singletonInstance == null) {
-                lock (_singletonLocker) {
-                    if (_singletonInstance == null) {
-                        _singletonInstance = new GameSetter();
-                    }
-                }
-            }
-            return _singletonInstance;
-        }
-
         public static GameTheme GetRandomTheme() {
-            Random rnd = new Random();
-            switch (rnd.Next(0, 6)) {
+            switch (new Random().Next(0, 6)) {
                 case 0:
                     return GameTheme.AS;
                 case 1:
@@ -112,7 +87,7 @@ namespace ASMinesweeperGame.ViewModel {
             using (StreamReader reader = new StreamReader(layoutFilePath)) {
                 int row = 0;
                 while (!reader.EndOfStream) {
-                    string line = reader.ReadLine().Trim();
+                    string? line = reader.ReadLine()?.Trim();
                     if (string.IsNullOrWhiteSpace(line)) {
                         continue;
                     }
@@ -183,32 +158,39 @@ namespace ASMinesweeperGame.ViewModel {
                 }
             }
         }
-        public void SwitchDiffcult(StartGameInfo gameInfo) {
+        public void SwitchDifficult(GameDifficult gameInfo) {
             switch (gameInfo) {
-                case StartGameInfo.Easy:
+                case GameDifficult.Easy:
                     RowSize = 9;
                     ColumnSize = 9;
                     MineSize = 10;
                     break;
-                case StartGameInfo.Normal:
+                case GameDifficult.Normal:
                     RowSize = 16;
                     ColumnSize = 16;
                     MineSize = 40;
                     break;
-                case StartGameInfo.Hard:
+                case GameDifficult.Hard:
                     RowSize = 16;
                     ColumnSize = 30;
                     MineSize = 99;
                     break;
-                case StartGameInfo.Custom:
+                case GameDifficult.Custom:
                     break;
                 default:
                     break;
             }
         }
-
         public void OnPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        private GameSetter() {
+
+        }
+        private int _rowSize = 9;
+        private int _columnSize = 9;
+        private int _mineSize = 10;
+        private GameTheme _gameTheme = GameTheme.AS;
     }
 }

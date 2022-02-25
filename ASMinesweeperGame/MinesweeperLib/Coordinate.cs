@@ -1,44 +1,38 @@
-﻿namespace ASMinesweeperGame.MinesweeperLib {
-    public struct Coordinate {
-        private int _row;
-        private int _column;
+﻿using System;
 
-        public int Row {
-            get {
-                return _row;
-            }
-            set {
-                _row = value;
-            }
-        }
-        public int Column {
-            get {
-                return _column;
-            }
-            set {
-                _column = value;
-            }
-        }
+namespace ASMinesweeperGame.MinesweeperLib {
+    public readonly struct Coordinate : IEquatable<Coordinate> {
+        public int Row { get; }
+        public int Column { get; }
 
         public Coordinate(int row, int column) {
-            _row = row;
-            _column = column;
+            Row = row;
+            Column = column;
         }
 
         public static bool operator ==(Coordinate left, Coordinate right) {
-            return left._row == right._row && left._column == right._column;
+            return left.Row == right.Row && left.Column == right.Column;
         }
         public static bool operator !=(Coordinate left, Coordinate right) {
             return !(left == right);
         }
-        public override int GetHashCode() {
-            return base.GetHashCode();
+        public bool Equals(Coordinate other) {
+            return Row == other.Row && Column == other.Column;
         }
-        public override bool Equals(object obj) {
-            return base.Equals(obj);
+        public override bool Equals(object? obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (typeof(Coordinate) != obj.GetType()) {
+                return false;
+            }
+            return Equals((Coordinate)obj);
+        }
+        public override int GetHashCode() {
+            return Row ^ Column;
         }
         public override string ToString() {
-            return $"[{_row}, {_column}]";
+            return $"({Row}, {Column})";
         }
     }
 }

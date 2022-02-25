@@ -2,52 +2,44 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace ASMinesweeperGame.View {
     /// <summary>
     /// GameSetterControlPanel.xaml 的交互逻辑
     /// </summary>
     public partial class GameSetterControlPanel : UserControl {
-        private GameSetter _gameSetter;
+        public event EventHandler<StartGameEventArgs>? GameStarted;
 
         public static readonly DependencyProperty GameThemeProperty =
             DependencyProperty.Register(nameof(GameTheme), typeof(GameTheme), typeof(GameSetterControlPanel), new PropertyMetadata(GameTheme.AS));
 
-        public event EventHandler<StartGameEventArgs> StartGame;
+        public RoutedCommand StartGame { get; } = new RoutedCommand();
 
+        public GameSetter GameSetter { get; } = GameSetter.Instance;
         public GameTheme GameTheme {
             get { return (GameTheme)GetValue(GameThemeProperty); }
             set { SetValue(GameThemeProperty, value); }
         }
 
-        public GameSetter GameSetter {
-            get {
-                return _gameSetter;
-            }
-        }
-        public GameSetterControlPanel() {
-            _gameSetter = GameSetter.GetInstance();
-            InitializeComponent();
+        private void RegistCommands() {
+            var sgBinding = new CommandBinding();
+            sgBinding.Command = StartGame;
+            sgBinding.CanExecute += (s, e) => e.CanExecute = true;
+            sgBinding.Executed += (s, e) => {
+                try {
+                    GameStarted?.Invoke(this, new StartGameEventArgs((GameDifficult)e.Parameter));
+                }
+                catch (Exception) {
+                    GameStarted?.Invoke(this, new StartGameEventArgs(GameDifficult.Custom));
+                }
+            };
+            CommandBindings.Add(sgBinding);
         }
 
-        private void StartGame_Click(object sender, RoutedEventArgs e) {
-            StartGameInfo inf;
-            switch ((sender as Button).Name) {
-                case "Easy":
-                    inf = StartGameInfo.Easy;
-                    break;
-                case "Normal":
-                    inf = StartGameInfo.Normal;
-                    break;
-                case "Hard":
-                    inf = StartGameInfo.Hard;
-                    break;
-                default:
-                    inf = StartGameInfo.Custom;
-                    break;
-            }
-            StartGame?.Invoke(this, new StartGameEventArgs(inf));
-            return;
+        public GameSetterControlPanel() {
+            RegistCommands();
+            InitializeComponent();
         }
     }
 }

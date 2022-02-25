@@ -6,7 +6,7 @@ namespace ASMinesweeperGame.View {
     /// FileDragControl.xaml 的交互逻辑
     /// </summary>
     public partial class FileDragControl : UserControl {
-        public event DragEventHandler FileDraged;
+        public event DragEventHandler? FileDraged;
         public FileDragControl() {
             InitializeComponent();
         }

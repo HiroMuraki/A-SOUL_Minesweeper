@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
@@ -8,26 +9,25 @@ namespace ASMinesweeperGame.View {
     /// <summary>
     /// RemakeControl.xaml 的交互逻辑
     /// </summary>
-    public partial class RemakeControl : UserControl, INotifyPropertyChanged {
-        private static readonly string _remakePassword = "/REMAKE";
-        private string _password;
+    public partial class RemakeControl : UserControl {
+        public static readonly DependencyProperty PasswordProperty =
+            DependencyProperty.Register(nameof(Password), typeof(string), typeof(RemakeControl), new PropertyMetadata(""));
+        public static string RemakePassword { get; } = "/REMAKE";
 
+        public event EventHandler<RemakeEventArgs>? Remake;
+        public event EventHandler<RemakeEventArgs>? PasswordError;
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <summary>
+        /// Password
+        /// </summary>
         public string Password {
             get {
-                return _password;
+                return (string)GetValue(PasswordProperty);
             }
             set {
-                _password = value;
-                OnPropertyChanged(nameof(Password));
+                SetValue(PasswordProperty, value);
             }
-        }
-        public event EventHandler<RemakeEventArgs> Remake;
-        public event EventHandler<RemakeEventArgs> Error;
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public RemakeControl() {
-            _password = "";
-            InitializeComponent();
         }
 
         public void Display() {
@@ -51,19 +51,19 @@ namespace ASMinesweeperGame.View {
             BeginAnimation(OpacityProperty, animation);
         }
 
+        public RemakeControl() {
+            InitializeComponent();
+        }
         private void Remake_KeyDown(object sender, KeyEventArgs e) {
             if (e.Key == Key.Enter) {
-                if (Password.ToUpper() == _remakePassword) {
+                if (Password.ToUpper() == RemakePassword) {
                     Password = "";
                     Remake?.Invoke(this, new RemakeEventArgs());
                 }
                 else {
-                    Error?.Invoke(this, new RemakeEventArgs());
+                    PasswordError?.Invoke(this, new RemakeEventArgs());
                 }
             }
-        }
-        private void OnPropertyChanged(string propertyName) {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

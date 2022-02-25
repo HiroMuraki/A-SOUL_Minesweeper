@@ -5,24 +5,13 @@ using System.Text;
 
 namespace ASMinesweeperGame.MinesweeperLib {
     public class Game : INotifyPropertyChanged {
-        #region 后备字段
-        private static Game _singletonInstance;
-        private static readonly object _singletonLocker = new object();
-        private int _rowSize;
-        private int _columnSize;
-        private int _minesSize;
-        private int _flagsCount;
-        private bool _isFirstOpen;
-        private DateTime _startTime;
-        private Dictionary<Coordinate, IBlock> _blocks;
-        private Func<IBlock> _blockCreater;
-        #endregion
+        public static Game Instance { get; private set; } = new Game();
 
         #region 公共事件
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event EventHandler<GameStartedEventArgs> GameStarted;
-        public event EventHandler<GameLayoutRestedEventArgs> GameLayoutRested;
-        public event EventHandler<GameCompletedEventArgs> GameCompleted;
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public event EventHandler<GameStartedEventArgs>? GameStarted;
+        public event EventHandler<GameLayoutRestedEventArgs>? GameLayoutRested;
+        public event EventHandler<GameCompletedEventArgs>? GameCompleted;
         #endregion
 
         #region 公共属性
@@ -75,29 +64,12 @@ namespace ASMinesweeperGame.MinesweeperLib {
                 }
             }
         }
-        public Func<IBlock> BlockCreater {
-            private get {
-                return _blockCreater;
-            }
-            set {
-                _blockCreater = value;
-            }
-        }
+        public Func<IBlock> BlockCreater { get; set; }
         #endregion
 
         #region 构造函数
         private Game() {
-
-        }
-        public static Game GetInstance() {
-            if (_singletonInstance == null) {
-                lock (_singletonLocker) {
-                    if (_singletonInstance == null) {
-                        _singletonInstance = new Game();
-                    }
-                }
-            }
-            return _singletonInstance;
+            BlockCreater = () => null!;
         }
         #endregion
 
@@ -116,7 +88,7 @@ namespace ASMinesweeperGame.MinesweeperLib {
             _flagsCount = 0;
             _isFirstOpen = true;
             // 初始化方块序列
-            _blocks = new Dictionary<Coordinate, IBlock>();
+            _blocks.Clear();
             for (int row = 0; row < _rowSize; row++) {
                 for (int col = 0; col < _columnSize; col++) {
                     Coordinate coordinate = new Coordinate(row, col);
@@ -148,7 +120,7 @@ namespace ASMinesweeperGame.MinesweeperLib {
             _flagsCount = 0;
             _isFirstOpen = false;
             // 初始化方块序列
-            _blocks = new Dictionary<Coordinate, IBlock>();
+            _blocks.Clear();
             for (int row = 0; row < _rowSize; row++) {
                 for (int col = 0; col < _columnSize; col++) {
                     Coordinate coordinate = new Coordinate(row, col);
@@ -253,7 +225,13 @@ namespace ASMinesweeperGame.MinesweeperLib {
         }
         #endregion
 
-        #region 辅助方法
+        private int _rowSize;
+        private int _columnSize;
+        private int _minesSize;
+        private int _flagsCount;
+        private bool _isFirstOpen;
+        private DateTime _startTime;
+        private readonly Dictionary<Coordinate, IBlock> _blocks = new Dictionary<Coordinate, IBlock>();
         private void OnPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -426,7 +404,6 @@ namespace ASMinesweeperGame.MinesweeperLib {
             }
             return sb.ToString();
         }
-        #endregion
     }
 }
 

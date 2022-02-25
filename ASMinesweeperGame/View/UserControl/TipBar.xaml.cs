@@ -9,19 +9,16 @@ namespace ASMinesweeperGame.View {
     /// TipBar.xaml 的交互逻辑
     /// </summary>
     public partial class TipBar : UserControl {
-        public object Tip {
+        public static readonly DependencyProperty TipProperty =
+            DependencyProperty.Register(nameof(Tip), typeof(object), typeof(TipBar), new PropertyMetadata(null));
+
+        public object? Tip {
             get {
                 return GetValue(TipProperty);
             }
             set {
                 SetValue(TipProperty, value);
             }
-        }
-        public static readonly DependencyProperty TipProperty =
-            DependencyProperty.Register(nameof(Tip), typeof(object), typeof(TipBar), new PropertyMetadata(null));
-
-        public TipBar() {
-            InitializeComponent();
         }
 
         public async void DisplayTip(object tip, TimeSpan displayTime) {
@@ -42,6 +39,10 @@ namespace ASMinesweeperGame.View {
             };
             BeginAnimation(HeightProperty, animation2);
             Tip = null;
+        }
+
+        public TipBar() {
+            InitializeComponent();
         }
     }
 }

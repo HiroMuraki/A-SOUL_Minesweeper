@@ -5,71 +5,16 @@ using System.Windows.Media;
 
 namespace ASMinesweeperGame.ViewModel {
     public class GameSoundPlayer {
-        private static GameSoundPlayer _singletonObject;
-        private static readonly object _singletonLocker = new object();
-        private readonly Random _rnd;
-        private readonly List<Uri> _openFXSound; // 点击音效
-        private readonly List<Uri> _quickOpenFXSound; // 双击音效
-        private readonly List<Uri> _flagFXSound; // 标旗音效
-        private readonly List<Uri> _mineFXSound; // 寄音效
-        private readonly List<Uri> _gameMusic; // 背景音乐
-        private readonly MediaPlayer _openSoundPlayer; // 点击技能音播放器
-        private readonly MediaPlayer _quickOpenSoundPlayer; // 双击音效播放器
-        private readonly MediaPlayer _flagSoundPlayer; // 标旗音效播放器
-        private readonly MediaPlayer _mineSoundPlayer; // 寄音效播放器
-        private readonly MediaPlayer _musicSoundPlayer; // 背景音乐播放器
-        private string _gameSoundDirectory;
-
-        public string GameSoundDirectory {
-            get {
-                return _gameSoundDirectory;
-            }
-            set {
-                _gameSoundDirectory = value;
-            }
-        }
-        private GameSoundPlayer() {
-            _rnd = new Random();
-            _gameSoundDirectory = "ASSounds";
-
-            // 音效播放器初始化
-            _openSoundPlayer = new MediaPlayer();
-            _quickOpenSoundPlayer = new MediaPlayer();
-            _flagSoundPlayer = new MediaPlayer();
-            _mineSoundPlayer = new MediaPlayer();
-            _musicSoundPlayer = new MediaPlayer();
-            _musicSoundPlayer.MediaEnded += MusicSoundPlayer_MediaEnded; // 背景音乐重复播放
-
-            // 音效列表初始化
-            _openFXSound = new List<Uri>();
-            _quickOpenFXSound = new List<Uri>();
-            _flagFXSound = new List<Uri>();
-            _mineFXSound = new List<Uri>();
-            _gameMusic = new List<Uri>();
-            //_avaSkillSounds = new List<Uri>();
-            //_bellaSkillSounds = new List<Uri>();
-            //_carolSkillSounds = new List<Uri>();
-            //_dianaSkillSounds = new List<Uri>();
-            //_eileenSkillSounds = new List<Uri>();
-        }
-        public static GameSoundPlayer GetInstance() {
-            if (_singletonObject == null) {
-                lock (_singletonLocker) {
-                    if (_singletonObject == null) {
-                        _singletonObject = new GameSoundPlayer();
-                    }
-                }
-            }
-            return _singletonObject;
-        }
+        public static GameSoundPlayer Instance { get; } = new GameSoundPlayer();
+        public string GameSoundDirectory { get; set; } = "ASSounds";
 
         public void LoadSounds() {
-            if (!Directory.Exists(_gameSoundDirectory)) {
+            if (!Directory.Exists(GameSoundDirectory)) {
                 return;
             }
-            foreach (var file in Directory.GetFiles(_gameSoundDirectory)) {
+            foreach (var file in Directory.GetFiles(GameSoundDirectory)) {
                 string fileName = Path.GetFileName(file).ToUpper();
-                Uri soundUri = new Uri($@"{_gameSoundDirectory}\{fileName}", UriKind.Relative);
+                Uri soundUri = new Uri($@"{GameSoundDirectory}\{fileName}", UriKind.Relative);
                 // 跳过非MP3
                 if (!(Path.GetExtension(fileName) == ".MP3")) {
                     continue;
@@ -125,6 +70,21 @@ namespace ASMinesweeperGame.ViewModel {
             RandomPlay(_musicSoundPlayer, _gameMusic);
         }
 
+        private GameSoundPlayer() {
+            // 音效播放器初始化
+            _musicSoundPlayer.MediaEnded += MusicSoundPlayer_MediaEnded; // 背景音乐重复播放
+        }
+        private readonly Random _rnd = new Random();
+        private readonly List<Uri> _openFXSound = new List<Uri>(); // 点击音效
+        private readonly List<Uri> _quickOpenFXSound = new List<Uri>(); // 双击音效
+        private readonly List<Uri> _flagFXSound = new List<Uri>(); // 标旗音效
+        private readonly List<Uri> _mineFXSound = new List<Uri>(); // 寄音效
+        private readonly List<Uri> _gameMusic = new List<Uri>(); // 背景音乐
+        private readonly MediaPlayer _openSoundPlayer = new MediaPlayer(); // 点击技能音播放器
+        private readonly MediaPlayer _quickOpenSoundPlayer = new MediaPlayer(); // 双击音效播放器
+        private readonly MediaPlayer _flagSoundPlayer = new MediaPlayer(); // 标旗音效播放器
+        private readonly MediaPlayer _mineSoundPlayer = new MediaPlayer(); // 寄音效播放器
+        private readonly MediaPlayer _musicSoundPlayer = new MediaPlayer(); // 背景音乐播放器
         private void RandomPlay(MediaPlayer player, List<Uri> resources) {
             // 音频列表资源为0则跳过播放
             if (resources.Count <= 0) {
@@ -134,7 +94,7 @@ namespace ASMinesweeperGame.ViewModel {
             player.Open(resources[_rnd.Next(0, resources.Count)]);
             player.Play();
         }
-        private void MusicSoundPlayer_MediaEnded(object sender, EventArgs e) {
+        private void MusicSoundPlayer_MediaEnded(object? sender, EventArgs e) {
             PlayMusic();
         }
 

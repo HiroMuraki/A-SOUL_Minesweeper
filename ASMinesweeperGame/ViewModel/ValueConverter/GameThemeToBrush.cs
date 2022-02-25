@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -7,40 +8,25 @@ namespace ASMinesweeperGame.ViewModel.ValueConverter {
     [ValueConversion(typeof(GameTheme), typeof(Brush))]
     public class GameThemeToBrush : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-            Brush brush = App.ColorDict["ASTheme"] as Brush;
             try {
-                switch ((GameTheme)value) {
-                    case GameTheme.AS:
-                        brush = App.ColorDict["ASTheme"] as Brush;
-                        break;
-                    case GameTheme.Ava:
-                        brush = App.ColorDict["AvaTheme"] as Brush;
-                        break;
-                    case GameTheme.Bella:
-                        brush = App.ColorDict["BellaTheme"] as Brush;
-                        break;
-                    case GameTheme.Carol:
-                        brush = App.ColorDict["CarolTheme"] as Brush;
-                        break;
-                    case GameTheme.Diana:
-                        brush = App.ColorDict["DianaTheme"] as Brush;
-                        break;
-                    case GameTheme.Eileen:
-                        brush = App.ColorDict["EileenTheme"] as Brush;
-                        break;
-                    default:
-                        break;
-                }
-                return brush;
-
+                return _resources[(GameTheme)value];
             }
             catch (Exception) {
-                return App.ColorDict["AS"] as Brush;
+                return _resources[GameTheme.AS];
             }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
+
+        private static readonly Dictionary<GameTheme, Brush> _resources = new Dictionary<GameTheme, Brush> {
+            [GameTheme.AS] = (Brush)App.ColorDict["AvaTheme"],
+            [GameTheme.Ava] = (Brush)App.ColorDict["AvaTheme"],
+            [GameTheme.Bella] = (Brush)App.ColorDict["BellaTheme"],
+            [GameTheme.Carol] = (Brush)App.ColorDict["CarolTheme"],
+            [GameTheme.Diana] = (Brush)App.ColorDict["DianaTheme"],
+            [GameTheme.Eileen] = (Brush)App.ColorDict["EileenTheme"],
+        };
     }
 }

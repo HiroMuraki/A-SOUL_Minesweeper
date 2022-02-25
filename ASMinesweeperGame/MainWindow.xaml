@@ -49,8 +49,8 @@
                 <RowDefinition/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Button Grid.Row="0" Height="40" Content="=" VerticalAlignment="Top" Style="{StaticResource TitleButton}" Click="ExpandSetterPanel_Click"/>
-            <View:GameSetterControlPanel Grid.Row="1" x:Name="SetterPanel" GameTheme="{Binding Path=Theme,ElementName=Self}" Opacity="0" StartGame="StartGame_Click"/>
+            <Button Grid.Row="0" Height="40" Content="=" VerticalAlignment="Top" Style="{StaticResource TitleButton}" Command="{Binding ExpandSetterPanel}"/>
+            <View:GameSetterControlPanel Grid.Row="1" x:Name="SetterPanel" GameTheme="{Binding Path=Theme,ElementName=Self}" Opacity="0" GameStarted="StartGame_Click"/>
             <Label Grid.Row="2" Height="50" Content="{Binding Game.GameProcess}" ToolTip="剩余寄数（总寄数 - 标记数）" FontSize="16" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="{StaticResource TextTheme}"/>
         </Grid>
         <Grid Grid.Column="1">
@@ -62,7 +62,7 @@
                 </Grid>
             </Viewbox>
             <Grid MouseLeftButtonDown="Window_Move">
-                <View:RemakeControl x:Name="GameRemaker" IsHitTestVisible="False" Opacity="0" Remake="RemakeGame_Remake" Error="RemakeGame_Error"/>
+                <View:RemakeControl x:Name="GameRemaker" IsHitTestVisible="False" Opacity="0" Remake="RemakeGame_Remake" PasswordError="RemakeGame_Error"/>
                 <View:GameStatisticsControl x:Name="GameStatistics" IsHitTestVisible="False" Opacity="0"/>
                 <View:FileDragControl x:Name="FileLoader" IsHitTestVisible="False" FileDraged="RestoreGame_Click"/>
                 <View:TipBar x:Name="MessageTip" Height="0" VerticalAlignment="Top"/>
@@ -93,8 +93,8 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Content="载入" FontSize="20" ToolTip="载入一局游戏" Style="{StaticResource TitleButton}" Click="RestoreGame_Click"/>
-                    <Button Grid.Column="1" Content="保存" FontSize="20" ToolTip="保存本局游戏" Style="{StaticResource TitleButton}" Click="SaveGame_Click"/>
+                    <Button Grid.Column="0" Content="载入" FontSize="20" ToolTip="载入一局游戏" Style="{StaticResource TitleButton}" Command="{Binding LoadGame}" />
+                    <Button Grid.Column="1" Content="保存" FontSize="20" ToolTip="保存本局游戏" Style="{StaticResource TitleButton}" Command="{Binding SaveGame}"/>
                 </Grid>
                 <Grid HorizontalAlignment="Right" Width="200">
                     <Grid.ColumnDefinitions>
@@ -102,9 +102,9 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Content="&#x2501;" Style="{StaticResource TitleButton}" Click="Window_Minimum"/>
-                    <Button Grid.Column="1" Content="&#x2610;" Style="{StaticResource TitleButton}" Click="Window_Maximum"/>
-                    <Button Grid.Column="2"  Content="&#x2573;" Style="{StaticResource TitleButton}" Click="Window_Close"/>
+                    <Button Grid.Column="0" Content="&#x2501;" Style="{StaticResource TitleButton}" Command="{Binding MinimumWindow}"/>
+                    <Button Grid.Column="1" Content="&#x2610;" Style="{StaticResource TitleButton}" Command="{Binding MaximumWindow}"/>
+                    <Button Grid.Column="2"  Content="&#x2573;" Style="{StaticResource TitleButton}" Command="{Binding CloseWindow}"/>
                 </Grid>
             </Grid>
         </Grid>

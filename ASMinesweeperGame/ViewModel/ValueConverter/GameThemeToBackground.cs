@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -6,26 +7,25 @@ namespace ASMinesweeperGame.ViewModel.ValueConverter {
     [ValueConversion(typeof(GameTheme), typeof(Uri))]
     public class GameThemeToBackground : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-            switch ((GameTheme)value) {
-                case GameTheme.AS:
-                    return new Uri("/ASMinesweeperGame;component/Resources/Images/Background_ASTheme.jpg", UriKind.Relative);
-                case GameTheme.Ava:
-                    return new Uri("/ASMinesweeperGame;component/Resources/Images/Background_AvaTheme.jpg", UriKind.Relative);
-                case GameTheme.Bella:
-                    return new Uri("/ASMinesweeperGame;component/Resources/Images/Background_BellaTheme.jpg", UriKind.Relative);
-                case GameTheme.Carol:
-                    return new Uri("/ASMinesweeperGame;component/Resources/Images/Background_CarolTheme.jpg", UriKind.Relative);
-                case GameTheme.Diana:
-                    return new Uri("/ASMinesweeperGame;component/Resources/Images/Background_DianaTheme.jpg", UriKind.Relative);
-                case GameTheme.Eileen:
-                    return new Uri("/ASMinesweeperGame;component/Resources/Images/Background_EileenTheme.jpg", UriKind.Relative);
-                default:
-                    return new Uri("/ASMinesweeperGame;component/Resources/Images/Background_ASTheme.jpg", UriKind.Relative);
+            try {
+                return _resources[(GameTheme)value];
+            }
+            catch {
+                return _resources[GameTheme.AS];
             }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
+
+        private static readonly Dictionary<GameTheme, Uri> _resources = new Dictionary<GameTheme, Uri> {
+            [GameTheme.AS] = new Uri($"/ASMinesweeperGame;component/Resources/Images/Backgrounds/AvaTheme.jpg", UriKind.Relative),
+            [GameTheme.Ava] = new Uri($"/ASMinesweeperGame;component/Resources/Images/Backgrounds/AvaTheme.jpg", UriKind.Relative),
+            [GameTheme.Bella] = new Uri($"/ASMinesweeperGame;component/Resources/Images/Backgrounds/BellaTheme.jpg", UriKind.Relative),
+            [GameTheme.Carol] = new Uri($"/ASMinesweeperGame;component/Resources/Images/Backgrounds/CarolTheme.jpg", UriKind.Relative),
+            [GameTheme.Diana] = new Uri($"/ASMinesweeperGame;component/Resources/Images/Backgrounds/DianaTheme.jpg", UriKind.Relative),
+            [GameTheme.Eileen] = new Uri($"/ASMinesweeperGame;component/Resources/Images/Backgrounds/EileenTheme.jpg", UriKind.Relative),
+        };
     }
 }

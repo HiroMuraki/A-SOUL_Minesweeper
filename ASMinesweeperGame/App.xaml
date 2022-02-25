@@ -8,7 +8,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/ASMinesweeperGame;component/Resources/ValueConverters.xaml"/>
                 <ResourceDictionary Source="/ASMinesweeperGame;component/Resources/PresetColors.xaml"/>
-                <ResourceDictionary Source="/ASMinesweeperGame;component/Resources/Images.xaml"/>
                 <ResourceDictionary Source="/ASMinesweeperGame;component/Resources/Styles/RSliderBarStyle.xaml"/>
                 <ResourceDictionary Source="/ASMinesweeperGame;component/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>

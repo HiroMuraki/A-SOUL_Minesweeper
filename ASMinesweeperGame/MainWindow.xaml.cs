@@ -18,50 +18,47 @@ namespace ASMinesweeperGame {
         public static readonly DependencyProperty ThemeProperty =
             DependencyProperty.Register(nameof(Theme), typeof(GameTheme), typeof(MainWindow), new PropertyMetadata(GameTheme.AS));
 
-        public Game Game { get; set; }
-        public GameSetter GameSetter { get; set; }
-        public GameSoundPlayer GameSound { get; set; }
+        public RoutedCommand SaveGame { get; } = new RoutedCommand();
+        public RoutedCommand LoadGame { get; } = new RoutedCommand();
+        public RoutedCommand MinimumWindow { get; } = new RoutedCommand();
+        public RoutedCommand MaximumWindow { get; } = new RoutedCommand();
+        public RoutedCommand CloseWindow { get; } = new RoutedCommand();
+        public RoutedCommand ExpandSetterPanel { get; } = new RoutedCommand();
+
+        public Game Game { get; } = Game.Instance;
+        public GameSetter GameSetter { get; } = GameSetter.Instance;
+        public GameSoundPlayer GameSound { get; } = GameSoundPlayer.Instance;
 
         public MainWindow() {
-            Game = Game.GetInstance();
+            RegistCommands();
             Game.BlockCreater = () => {
                 return new MBlock();
             };
-            GameSetter = GameSetter.GetInstance();
             Game.GameLayoutRested += Game_GameLayoutRested;
             Game.GameCompleted += Game_GameCompleted;
-            GameSound = GameSoundPlayer.GetInstance();
             InitializeComponent();
             GridRoot.MaxHeight = SystemParameters.WorkArea.Height + 1;
             GridRoot.MaxWidth = SystemParameters.WorkArea.Width + 1;
-            StartGame_Click(null, new StartGameEventArgs(StartGameInfo.Custom));
-            ExpandSetterPanel();
+            StartGame_Click(null!, new StartGameEventArgs(GameDifficult.Easy));
+            ExpandSetterPanelHelper();
             GameSound.PlayMusic();
         }
 
         private void StartGame_Click(object sender, StartGameEventArgs e) {
             try {
                 Theme = GameSetter.GetRandomTheme();
-                GameSetter.SwitchDiffcult(e.StartInfo);
+                GameSetter.SwitchDifficult(e.StartInfo);
                 Game.Start(GameSetter.RowSize, GameSetter.ColumnSize, GameSetter.MineSize);
                 GameStatistics.Hide();
                 GameRemaker.Hide();
             }
             catch (Exception exp) {
-                MessageTip.DisplayTip($"文件读取错误：{exp.Message}", TimeSpan.FromSeconds(2));
+                MessageTip.DisplayTip($"{exp.Message}", TimeSpan.FromSeconds(2));
             }
         }
         private void RestoreGame_Click(object sender, DragEventArgs e) {
             string layoutFile = ((string[])e.Data.GetData(DataFormats.FileDrop))[0];
             RestoreGame(layoutFile);
-        }
-        private void RestoreGame_Click(object sender, RoutedEventArgs e) {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.InitialDirectory = Environment.CurrentDirectory;
-            ofd.Filter = "存档文件|*.txt";
-            if (ofd.ShowDialog() == true) {
-                RestoreGame(ofd.FileName);
-            }
         }
         private void RemakeGame_Remake(object sender, RemakeEventArgs e) {
             Game.Restart();
@@ -71,15 +68,7 @@ namespace ASMinesweeperGame {
         private void RemakeGame_Error(object sender, RemakeEventArgs e) {
             MessageTip.DisplayTip("/remake出错，请检查/remake指令", TimeSpan.FromSeconds(2));
         }
-        private void SaveGame_Click(object sender, RoutedEventArgs e) {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.FileName = "MWLayout.txt";
-            if (sfd.ShowDialog() == true) {
-                GameSetter.SaveLayout(Game.BlockArray, Game.RowSize, Game.ColumnSize, sfd.FileName);
-                MessageTip.DisplayTip($"保存完成：{sfd.FileName}", TimeSpan.FromSeconds(2));
-            }
-        }
-        private void Game_GameCompleted(object sender, GameCompletedEventArgs e) {
+        private void Game_GameCompleted(object? sender, GameCompletedEventArgs e) {
             if (e.IsGameFinished) {
                 GameStatistics.Display(Game.RowSize, Game.ColumnSize, Game.MineSize, e.Time);
             }
@@ -88,7 +77,7 @@ namespace ASMinesweeperGame {
                 GameSound.PlayMineFXSound();
             }
         }
-        private void Game_GameLayoutRested(object sender, GameLayoutRestedEventArgs e) {
+        private void Game_GameLayoutRested(object? sender, GameLayoutRestedEventArgs e) {
             GameLayout.Children.Clear();
             GameLayout.Rows = Game.RowSize;
             GameLayout.Columns = Game.ColumnSize;
@@ -100,46 +89,24 @@ namespace ASMinesweeperGame {
                 GameLayout.Children.Add(mBlock);
             }
         }
-        private void ExpandSetterPanel_Click(object sender, RoutedEventArgs e) {
-            if (SetterArea.Width != 240) {
-                ExpandSetterPanel();
-            }
-            else {
-                FoldSetterPanel();
-            }
-        }
 
         private void Block_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             if (e.ClickCount >= 2) {
-                Game.OpenNearBlocks(sender as MBlock);
+                Game.OpenNearBlocks((MBlock)sender);
                 GameSound.PlayQuickOpenFXSound();
             }
             else {
-                Game.OpenBlock(sender as MBlock);
+                Game.OpenBlock((MBlock)sender);
                 GameSound.PlayOpenFXSound();
             }
             e.Handled = true;
         }
         private void Block_MouseRightButtonDown(object sender, MouseButtonEventArgs e) {
-            Game.FlagBlock(sender as MBlock);
+            Game.FlagBlock((MBlock)sender);
             GameSound.PlayFlagFXSound();
             e.Handled = true;
         }
 
-        private void Window_Minimum(object sender, RoutedEventArgs e) {
-            WindowState = WindowState.Minimized;
-        }
-        private void Window_Maximum(object sender, RoutedEventArgs e) {
-            if (WindowState == WindowState.Normal) {
-                WindowState = WindowState.Maximized;
-            }
-            else {
-                WindowState = WindowState.Normal;
-            }
-        }
-        private void Window_Close(object sender, RoutedEventArgs e) {
-            Application.Current.Shutdown();
-        }
         private void Window_Move(object sender, MouseButtonEventArgs e) {
             if (e.ClickCount >= 2) {
                 if (WindowState == WindowState.Normal) {
@@ -163,7 +130,72 @@ namespace ASMinesweeperGame {
             FileLoader.IsHitTestVisible = false;
         }
 
-        private void FoldSetterPanel() {
+        private void RegistCommands() {
+            var saveGameBinding = new CommandBinding();
+            saveGameBinding.Command = SaveGame;
+            saveGameBinding.CanExecute += (s, e) => e.CanExecute = true;
+            saveGameBinding.Executed += (s, e) => {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.FileName = "MWLayout.txt";
+                if (sfd.ShowDialog() == true) {
+                    GameSetter.SaveLayout(Game.BlockArray, Game.RowSize, Game.ColumnSize, sfd.FileName);
+                    MessageTip.DisplayTip($"保存完成：{sfd.FileName}", TimeSpan.FromSeconds(2));
+                }
+            };
+            CommandBindings.Add(saveGameBinding);
+
+            var loadGameBinding = new CommandBinding();
+            loadGameBinding.Command = LoadGame;
+            loadGameBinding.CanExecute += (s, e) => e.CanExecute = true;
+            loadGameBinding.Executed += (s, e) => {
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.InitialDirectory = Environment.CurrentDirectory;
+                ofd.Filter = "存档文件|*.txt";
+                if (ofd.ShowDialog() == true) {
+                    RestoreGame(ofd.FileName);
+                }
+            };
+            CommandBindings.Add(loadGameBinding);
+
+            var minimumWindowBinding = new CommandBinding();
+            minimumWindowBinding.Command = MinimumWindow;
+            minimumWindowBinding.CanExecute += (s, e) => e.CanExecute = true;
+            minimumWindowBinding.Executed += (s, e) => WindowState = WindowState.Minimized;
+            CommandBindings.Add(minimumWindowBinding);
+
+            var maximumWindowBinding = new CommandBinding();
+            maximumWindowBinding.Command = MaximumWindow;
+            maximumWindowBinding.CanExecute += (s, e) => e.CanExecute = true;
+            maximumWindowBinding.Executed += (s, e) => {
+                if (WindowState == WindowState.Normal) {
+                    WindowState = WindowState.Maximized;
+                }
+                else {
+                    WindowState = WindowState.Normal;
+                }
+            };
+            CommandBindings.Add(maximumWindowBinding);
+
+            var closeWindowBinding = new CommandBinding();
+            closeWindowBinding.Command = CloseWindow;
+            closeWindowBinding.CanExecute += (s, e) => e.CanExecute = true;
+            closeWindowBinding.Executed += (s, e) => Application.Current.Shutdown();
+            CommandBindings.Add(closeWindowBinding);
+
+            var expandSetterPanelBinding = new CommandBinding();
+            expandSetterPanelBinding.Command = ExpandSetterPanel;
+            expandSetterPanelBinding.CanExecute += (s, e) => e.CanExecute = true;
+            expandSetterPanelBinding.Executed += (s, e) => {
+                if (SetterArea.Width != 240) {
+                    ExpandSetterPanelHelper();
+                }
+                else {
+                    FoldSetterPanelHelper();
+                }
+            };
+            CommandBindings.Add(expandSetterPanelBinding);
+        }
+        private void FoldSetterPanelHelper() {
             DoubleAnimation widthAnimation = new DoubleAnimation() {
                 To = 50,
                 AccelerationRatio = 0.2,
@@ -180,7 +212,7 @@ namespace ASMinesweeperGame {
             SetterPanel.BeginAnimation(OpacityProperty, opacityAnimation);
             SetterPanel.IsHitTestVisible = false;
         }
-        private void ExpandSetterPanel() {
+        private void ExpandSetterPanelHelper() {
             DoubleAnimation widthAnimation = new DoubleAnimation() {
                 To = 240,
                 AccelerationRatio = 0.2,
@@ -195,7 +227,7 @@ namespace ASMinesweeperGame {
             };
             SetterArea.BeginAnimation(WidthProperty, widthAnimation);
             SetterPanel.BeginAnimation(OpacityProperty, opacityAnimation);
-            SetterPanel.IsHitTestVisible = true;  
+            SetterPanel.IsHitTestVisible = true;
         }
         private void RestoreGame(string layoutFile) {
             try {
